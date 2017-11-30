@@ -12,7 +12,7 @@ Starting webservices:
 Starting client:
 
     1. ipython logger_server/client.py
-    
+
 # Requirements
 1. Must be able to store messages of two types: error, info
 2. Must be able to retrieve list of log messages with basic filtration

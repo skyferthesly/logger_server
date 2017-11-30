@@ -14,10 +14,11 @@ setup(name='logger_server',
       author='Skyler Moore-Firkins',
       author_email='brehon1104@gmail.com',
 
-      setup_requires=['pytest',
-                      'requests',
-                      'flask'
-                      ]
+      install_requires=['pytest',
+                        'requests',
+                        'flask',
+                        'flask_restplus'
+                        ]
       )
 
 # TODO: pip.main is not part of the public interface
