@@ -2,12 +2,6 @@ import sqlite3
 import time
 import hashlib
 from uuid import uuid4
-from logger_server import login_manager
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.get(user_id)
 
 
 class Message(object):
@@ -40,6 +34,18 @@ class User(object):
         self.password_hash = password_hash
         self.id = id or str(uuid4())
         self.created_at = created_at or time.time()
+        self.authenticated = False
+
+    @classmethod
+    def get_by_username(cls, username):
+        conn = sqlite3.connect("logger.db")
+        c = conn.cursor()
+        res = c.execute("""
+                    SELECT * FROM users
+                    WHERE username = ?
+                    """, (username,)).fetchone()
+        if res:
+            return cls(res[1], res[2], res[0], res[3])
 
     @classmethod
     def get(cls, user_id):
@@ -47,8 +53,8 @@ class User(object):
         c = conn.cursor()
         res = c.execute("""
                     SELECT * FROM users
-                    WHERE users.id = ?
-                    """, user_id).fetchone()
+                    WHERE id = ?
+                    """, (user_id,)).fetchone()
         if res:
             return cls(res[1], res[2], res[0], res[3])
 
@@ -67,17 +73,6 @@ class User(object):
         d['id'] = self.id
 
     def validate(self, password):
-        return True
-        return self.password_hash == hashlib.sha3_512(password).hexdigest()
-
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        return self.id
+        if self.password_hash == hashlib.sha3_512(password.encode('utf-8')).hexdigest():
+            self.authenticated = True
+            return True

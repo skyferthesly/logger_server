@@ -20,8 +20,6 @@ setup(name='logger_server',
       install_requires=['pytest',
                         'requests',
                         'flask',
-                        # 'flask_restplus',
-                        'flask-login'
                         ]
       )
 
