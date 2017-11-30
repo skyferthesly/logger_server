@@ -1,36 +1,37 @@
 import json
-import hashlib
-from flask import Flask, request, Response, flash
+from flask import request, flash, jsonify
 from flask.views import MethodView
-from flask_login import login_user
+from flask_login import login_user, login_required
 from logger_server.exceptions import InvalidPayload
-from logger_server.models import insert_message, User
-
-app = Flask(__name__)
+from logger_server.models import User, Message
+from logger_server import app
 
 
 class Messages(MethodView):
+    @login_required
     def post(self):
         data = json.loads(request.data)
         if 'message' not in data:
             raise InvalidPayload("message is required")
-        insert_message(data['message'], data.get("message_type"))
-        return Response(status=201)
+        message = Message(data['message'], data.get('message_type')).save()
+        return jsonify(message.to_dict())
 
-app.add_url_rule('messages/', view_func=Messages, methods=['POST'])
+
+app.add_url_rule('/messages/', view_func=Messages.as_view('messages_api'), methods=['POST'])
 
 
 class Users(MethodView):
     def get(self, user_id):
-        return json.dumps(User.get(user_id).to_dict())
-
-app.add_url_rule('users/', view_func=Users, methods=['GET'])
+        return jsonify(User.get(user_id).to_dict())
 
 
-@app.route('login', methods=['GET'])
-def login(username, password):
-    user = User.get(username)
-    if user.validate(password):
+app.add_url_rule('/users/', view_func=Users.as_view('users_api'), methods=['GET'])
+
+
+@app.route('/login', methods=['GET'])
+def login():
+    user = User.get(request.form['username'])
+    if user.validate(request.form['password']):
         login_user(user)
         flash('Logged in successfully')
 

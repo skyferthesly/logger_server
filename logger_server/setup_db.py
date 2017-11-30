@@ -1,23 +1,18 @@
 import sqlite3
-from flask_login import LoginManager, login_user
-from logger_server.controllers import app
-
-login_manager = LoginManager()
-login_manager.init_app(app)
 
 
 def setup_db():
     conn = sqlite3.connect("logger.db")
     c = conn.cursor()
     c.execute("""
-            CREATE TABLE messages
+            CREATE TABLE IF NOT EXISTS messages
             (message TEXT,
             message_type TEXT,
             time REAL)
             """)
 
     c.execute("""
-            CREATE TABLE users
+            CREATE TABLE IF NOT EXISTS users
             (id TEXT,
             username TEXT,
             password_hash TEXT,
@@ -25,4 +20,16 @@ def setup_db():
             PRIMARY KEY (id))
             """)
 
+    conn.commit()
+
+
+def clear_db():
+    conn = sqlite3.connect("logger.db")
+    c = conn.cursor()
+    c.execute("""
+               DELETE FROM messages
+               """)
+    c.execute("""
+               DELETE FROM users
+               """)
     conn.commit()

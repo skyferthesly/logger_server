@@ -1,5 +1,8 @@
-from setuptools import setup, find_packages
 import pip
+import hashlib
+from setuptools import setup, find_packages
+from logger_server.setup_db import setup_db, clear_db
+from logger_server.models import User
 
 setup(name='logger_server',
       packages=find_packages(exclude=['tests']),
@@ -17,10 +20,13 @@ setup(name='logger_server',
       install_requires=['pytest',
                         'requests',
                         'flask',
-                        #'flask_restplus',
+                        # 'flask_restplus',
                         'flask-login'
                         ]
       )
 
 # TODO: pip.main is not part of the public interface
 pip.main(["install", 'git+https://github.com/skyferthesly/logger_client'])
+clear_db()
+setup_db()
+User('admin1', hashlib.sha3_512('pass1'.encode('utf-8')).hexdigest()).save()
