@@ -22,6 +22,10 @@ def login_required(f):
 
 class Messages(MethodView):
     @login_required
+    def get(self):
+        return jsonify([m.to_dict() for m in Message.get_top(request.args.get('count'))])
+
+    @login_required
     def post(self):
         data = json.loads(request.data)
         if 'message' not in data:
@@ -30,12 +34,22 @@ class Messages(MethodView):
         return jsonify(message.to_dict())
 
 
-app.add_url_rule('/messages/', view_func=Messages.as_view('messages_api'), methods=['POST'])
+app.add_url_rule('/messages/', view_func=Messages.as_view('messages_api'), methods=['GET', 'POST'])
+
+
+class AggregateMessageData(MethodView):
+    def get(self):
+        # TODO:
+        pass
 
 
 class Users(MethodView):
     def get(self, user_id):
         return jsonify(User.get(user_id).to_dict())
+
+    def post(self):
+        # TODO:
+        pass
 
 
 app.add_url_rule('/users/', view_func=Users.as_view('users_api'), methods=['GET'])

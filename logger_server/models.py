@@ -27,6 +27,27 @@ class Message(object):
         d['time'] = self.time
         return d
 
+    @classmethod
+    def get_top(cls, count):
+        conn = sqlite3.connect("logger.db")
+        c = conn.cursor()
+
+        q = "SELECT * FROM messages"
+        if count:
+            q += " ORDER BY time DESC LIMIT ?"
+            res = c.execute(q, (count,))
+        else:
+            q += " ORDER BY time DESC"
+            res = c.execute(q)
+
+        messages = []
+        for r in res:
+            messages.append(cls(r[0], r[1], r[2]))
+        return messages
+
+    def search(self):
+        pass
+
 
 class User(object):
     def __init__(self, username, password_hash, id=None, created_at=None):
