@@ -5,18 +5,19 @@ from uuid import uuid4
 
 
 class Message(object):
-    def __init__(self, message, message_type=None, _time=None):
+    def __init__(self, message, message_type=None, _time=None, email=None):
         self.message = message
         self.message_type = message_type or 'INFO'
         self.time = _time or time.time()
+        self.email = email
 
     def save(self):
         conn = sqlite3.connect("logger.db")
         c = conn.cursor()
         c.execute("""
                 INSERT INTO messages
-                VALUES (?, ?, ?)
-                """, (self.message, self.message_type, self.time))
+                VALUES (?, ?, ?, ?)
+                """, (self.message, self.message_type, self.time, self.email))
         conn.commit()
         return self
 
@@ -25,6 +26,7 @@ class Message(object):
         d['message'] = self.message
         d['message_type'] = self.message_type
         d['time'] = self.time
+        d['email'] = self.email
         return d
 
     @classmethod
@@ -42,7 +44,7 @@ class Message(object):
 
         messages = []
         for r in res:
-            messages.append(cls(r[0], r[1], r[2]))
+            messages.append(cls(r[0], r[1], r[2], r[3]))
         return messages
 
     def search(self):
@@ -55,7 +57,6 @@ class User(object):
         self.password_hash = password_hash
         self.id = id or str(uuid4())
         self.created_at = created_at or time.time()
-        self.authenticated = False
 
     @classmethod
     def get_by_username(cls, username):
@@ -95,5 +96,4 @@ class User(object):
 
     def validate(self, password):
         if self.password_hash == hashlib.sha3_512(password.encode('utf-8')).hexdigest():
-            self.authenticated = True
             return True

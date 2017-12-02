@@ -8,7 +8,8 @@ def setup_db():
             CREATE TABLE IF NOT EXISTS messages
             (message TEXT,
             message_type TEXT,
-            time REAL)
+            time REAL,
+            email TEXT)
             """)
 
     c.execute("""

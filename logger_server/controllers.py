@@ -1,4 +1,5 @@
 import json
+import re
 from flask import jsonify
 from flask.views import MethodView
 from logger_server.exceptions import InvalidPayload
@@ -21,6 +22,8 @@ def login_required(f):
 
 
 class Messages(MethodView):
+    email_regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
+
     @login_required
     def get(self):
         return jsonify([m.to_dict() for m in Message.get_top(request.args.get('count'))])
@@ -30,7 +33,10 @@ class Messages(MethodView):
         data = json.loads(request.data)
         if 'message' not in data:
             raise InvalidPayload("message is required")
-        message = Message(data['message'], data.get('message_type')).save()
+        email = data.get('email')
+        if not re.match(self.email_regex, email):
+            raise InvalidPayload("email is invalid")
+        message = Message(data['message'], data.get('message_type'), email=email).save()
         return jsonify(message.to_dict())
 
 
