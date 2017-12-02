@@ -20,6 +20,8 @@ setup(name='logger_server',
       install_requires=['pytest',
                         'requests',
                         'flask',
+                        'flask-swagger',
+                        'flask-swagger-ui'
                         ]
       )
 

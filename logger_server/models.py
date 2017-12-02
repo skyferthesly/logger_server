@@ -30,25 +30,58 @@ class Message(object):
         return d
 
     @classmethod
-    def get_top(cls, count):
+    def get_top(cls, timestamp=None, message_type=None, page=None, page_size=None, reverse_sort=None):
         conn = sqlite3.connect("logger.db")
         c = conn.cursor()
 
-        q = "SELECT * FROM messages"
-        if count:
-            q += " ORDER BY time DESC LIMIT ?"
-            res = c.execute(q, (count,))
-        else:
-            q += " ORDER BY time DESC"
-            res = c.execute(q)
+        q = "SELECT * FROM messages AS m"
+        wheres = list()
+        params = list()
+        if timestamp:
+            wheres.append("m.time = ?")
+            params.append(timestamp)
+        if message_type:
+            wheres.append('m.message_type = ?')
+            params.append(message_type)
 
+        if wheres:
+            q += " WHERE %s" % " AND ".join(wheres)
+
+        q += ' ORDER BY m.time %s' % ('' if reverse_sort else 'desc')
+        if page:
+            if not page_size:
+                page_size = 1
+            limit = page_size
+            offset = page * page_size - page_size if page != 1 else 0
+            q += ' LIMIT %s OFFSET %s' % (limit, offset)
+
+        print(q)
+        print(params)
+        res = c.execute(q, params)
         messages = []
         for r in res:
             messages.append(cls(r[0], r[1], r[2], r[3]))
         return messages
 
-    def search(self):
-        pass
+    @classmethod
+    def get_aggregate(cls):
+        conn = sqlite3.connect("logger.db")
+        c = conn.cursor()
+        res = c.execute("""
+                SELECT strftime('%-H', datetime(m.time, 'unixepoch', 'localtime')), COUNT(*)
+                FROM messages AS m
+                GROUP BY strftime('%-H', m.time)
+                """)
+
+        response = dict()
+        for r in res:
+            response[r[0]]: r[1]
+        return response
+
+    @classmethod
+    def validate_message_type(cls, message_type):
+        if message_type in ['INFO', 'ERROR']:
+            return True
 
 
 class User(object):

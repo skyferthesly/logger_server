@@ -24,13 +24,16 @@ def setup_db():
     conn.commit()
 
 
-def clear_db():
+def clear_db(messages=True, users=False):
     conn = sqlite3.connect("logger.db")
     c = conn.cursor()
-    c.execute("""
-               DELETE FROM messages
-               """)
-    c.execute("""
-               DELETE FROM users
-               """)
+
+    if messages:
+        c.execute("""
+                   DELETE FROM messages
+                   """)
+    if users:
+        c.execute("""
+                   DELETE FROM users
+                   """)
     conn.commit()
