@@ -12,7 +12,7 @@ Starting webservices:
 
 Starting client:
 
-    1. python logger_server/client.py
+    1. python logger_server
 **Note**: it is unusual to import a client into a server project. This
 is ONLY to prove that the client can be installed as an external dependency.
 You find can more information about the client [here](https://github.com/skyferthesly/logger_client).
