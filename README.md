@@ -12,14 +12,20 @@ Starting webservices:
 
 Starting client:
 
-    1. python logger_server
+    1. export SIMPLIFIED_LOGGER_SERVER_URI=<YOUR_SERVER_URI>
+    2. export MESSAGES_ENDPOINT=<YOUR_MESSAGES_ENDPOINT>
+    3. python logger_server/client.py
+
+SERVER_URI for local is http://127.0.0.1:5000/ by default.\
+MESSAGES_ENDPOINT is messages/ by default.
+
 **Note**: it is unusual to import a client into a server project. This
 is ONLY to prove that the client can be installed as an external dependency.
 You find can more information about the client [here](https://github.com/skyferthesly/logger_client).
 
 # Usage
 The API is documented using swagger. After starting the server, head over
-to <server_address>/api/docs/ for documentation on how to use the API. \
+to <YOUR_SERVER_URI>/api/docs/ for documentation on how to use the API. \
 **NOTE**: if you're running the server locally, the default address will
  be http://127.0.0.1:5000/api/docs/
 
@@ -27,6 +33,7 @@ This prototype has one user with credentials: \
 username: admin1\
 password: pass1
 
+Additionally, tests can be ran via `python setup.py test`
 # Improvements
 **Sqlite**\
 Sqlite is a file-based database and doesn't have the bells and whistles that

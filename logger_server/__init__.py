@@ -14,7 +14,7 @@ app.config['DEBUG'] = config['DEFAULT'].getboolean('DEBUG')
 app.config['TESTING'] = config['DEFAULT'].getboolean('TESTING')
 app.config['SWAGGER_JSON_URL'] = config['DEFAULT']['SWAGGER_JSON_URL']
 
-if sys.argv[1] == 'test':
+if len(sys.argv) > 1 and sys.argv[1] == 'test':
     # test
     app.config['DEBUG'] = config['TEST'].getboolean('DEBUG')
     app.config['TESTING'] = config['TEST'].getboolean('TESTING')
