@@ -24,8 +24,10 @@ setup(name='logger_server',
                         'pytest_runner'
                         ],
       setup_requires=['flask',
+                      'pytest',
                       'pytest-runner',
-                      'flask-swagger'],
+                      'flask-swagger',
+                      'flask_swagger_ui'],
       tests_require=['pytest'],
       test_suite='tests'
       )
