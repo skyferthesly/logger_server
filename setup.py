@@ -1,8 +1,6 @@
 import pip
 import sys
 from setuptools import setup, find_packages
-from logger_server.database import setup_db
-from logger_server.models import create_admin_user
 
 setup(name='logger_server',
       packages=find_packages(exclude=['tests']),
@@ -30,7 +28,10 @@ setup(name='logger_server',
       test_suite='tests'
       )
 
-if len(sys.argv) > 1 and not sys.argv[1] == 'test':
+if len(sys.argv) > 1 and sys.argv[1] == 'install':
+    from logger_server.database import setup_db
+    from logger_server.models import create_admin_user
+
     # TODO: pip.main is not part of the public interface
     pip.main(["install", 'git+https://github.com/skyferthesly/logger_client'])
     setup_db()
