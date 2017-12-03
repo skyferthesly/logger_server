@@ -61,6 +61,12 @@ suffice in allowing clients to store messages with its specific identifier.
 The next iteration of the API should include endpoints for User Administration.
 The models already exist.
 
+**Installation Enhancements**\
+Currently, the app is using `pip.main` in setup for installation. While it works,
+`pip.main` isn't part of the public interface. A more appropriate solution
+would be a scripting tool such as `paver` to handle installation of external packages
+and other setup needs more gracefully.
+
 **Filtering by Message Content**\
 Being able to filter by user_id or client_id would be a welcomed addition
 to this API's functionality. To achieve this, first we need to store
