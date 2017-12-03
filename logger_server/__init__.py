@@ -1,14 +1,34 @@
-from uuid import uuid4
+import configparser
+import sys
 from flask import Flask
 from flask_swagger_ui import get_swaggerui_blueprint
 
+print("logger_server init")
 app = Flask(__name__)
 
+# config
+config = configparser.ConfigParser()
+config.read("config.ini")
+
+# default
+app.config['DEBUG'] = config['DEFAULT'].getboolean('DEBUG')
+app.config['TESTING'] = config['DEFAULT'].getboolean('TESTING')
+app.config['SWAGGER_JSON_URL'] = config['DEFAULT']['SWAGGER_JSON_URL']
+
+if sys.argv[1] == 'test':
+    print('test config')
+    # test
+    app.config['DEBUG'] = config['TEST'].getboolean('DEBUG')
+    app.config['TESTING'] = config['TEST'].getboolean('TESTING')
+    app.config['DATABASE_URI'] = config['TEST']['DATABASE_URI']
+else:
+    print('prod config')
+    # prod
+    app.config['DATABASE_URI'] = config['PROD']['DATABASE_URI']
+
 SWAGGER_URL = '/api/docs'  # no trailing slash
-API_URL = "http://127.0.0.1:5000/spec"  # TODO: move this to config
+SWAGGER_JSON_URL = app.config['SWAGGER_JSON_URL']
 
 # swagger blueprint
-swaggerui_blueprint = get_swaggerui_blueprint(SWAGGER_URL, API_URL, config={'supportedSubmitMethods': ['get']})
+swaggerui_blueprint = get_swaggerui_blueprint(SWAGGER_URL, SWAGGER_JSON_URL, config={'supportedSubmitMethods': ['get']})
 app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
-
-app.secret_key = str(uuid4())

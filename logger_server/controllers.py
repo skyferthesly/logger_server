@@ -127,7 +127,7 @@ class Messages(MethodView):
         return jsonify(message.to_dict())
 
 
-app.add_url_rule('/messages/', view_func=Messages.as_view('messages_api'), methods=['GET', 'POST'])
+app.add_url_rule('/messages/', view_func=Messages.as_view('messages'), methods=['GET', 'POST'])
 
 
 class AggregateMessageData(MethodView):
@@ -147,7 +147,7 @@ class AggregateMessageData(MethodView):
         return jsonify(Message.get_aggregate())
 
 
-app.add_url_rule('/messages/aggregated/', view_func=AggregateMessageData.as_view('aggregate_messages_api'),
+app.add_url_rule('/messages/aggregated/', view_func=AggregateMessageData.as_view('aggregate_messages'),
                  methods=['GET'])
 
 
@@ -157,6 +157,4 @@ def spec():
     swag['info']['version'] = "0.1"
     swag['info']['title'] = "Simplified Central Logger API"
     swag['info']['description'] = "API to store and retrieve log messages"
-    swag['info']['contact'] = "brehon1104@gmail.com"
-    swag['info']['url'] = 'https://github.com/skyferthesly/logger_server'
     return jsonify(swag)

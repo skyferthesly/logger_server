@@ -1,7 +1,7 @@
-import sqlite3
 import time
 import hashlib
 from uuid import uuid4
+from logger_server.database import connect_db
 
 
 class Message(object):
@@ -12,8 +12,7 @@ class Message(object):
         self.email = email
 
     def save(self):
-        conn = sqlite3.connect("logger.db")
-        c = conn.cursor()
+        conn, c = connect_db()
         c.execute("""
                 INSERT INTO messages
                 VALUES (?, ?, ?, ?)
@@ -31,8 +30,7 @@ class Message(object):
 
     @classmethod
     def get_top(cls, timestamp=None, message_type=None, page=None, page_size=None, reverse_sort=None):
-        conn = sqlite3.connect("logger.db")
-        c = conn.cursor()
+        conn, c = connect_db()
 
         q = "SELECT * FROM messages AS m"
         wheres = list()
@@ -55,8 +53,6 @@ class Message(object):
             offset = page * page_size - page_size if page != 1 else 0
             q += ' LIMIT %s OFFSET %s' % (limit, offset)
 
-        print(q)
-        print(params)
         res = c.execute(q, params)
         messages = []
         for r in res:
@@ -65,8 +61,7 @@ class Message(object):
 
     @classmethod
     def get_aggregate(cls):
-        conn = sqlite3.connect("logger.db")
-        c = conn.cursor()
+        conn, c = connect_db()
         res = c.execute("""
                 SELECT strftime('%-H', datetime(m.time, 'unixepoch', 'localtime')), COUNT(*)
                 FROM messages AS m
@@ -93,8 +88,7 @@ class User(object):
 
     @classmethod
     def get_by_username(cls, username):
-        conn = sqlite3.connect("logger.db")
-        c = conn.cursor()
+        conn, c = connect_db()
         res = c.execute("""
                     SELECT * FROM users
                     WHERE username = ?
@@ -104,8 +98,7 @@ class User(object):
 
     @classmethod
     def get(cls, user_id):
-        conn = sqlite3.connect("logger.db")
-        c = conn.cursor()
+        conn, c = connect_db()
         res = c.execute("""
                     SELECT * FROM users
                     WHERE id = ?
@@ -113,9 +106,12 @@ class User(object):
         if res:
             return cls(res[1], res[2], res[0], res[3])
 
+    @classmethod
+    def create(cls, username, password):
+        return cls(username, hashlib.sha3_512(password.encode('utf-8')).hexdigest())
+
     def save(self):
-        conn = sqlite3.connect("logger.db")
-        c = conn.cursor()
+        conn, c = connect_db()
         c.execute("""
                 INSERT INTO users
                 VALUES (?, ?, ?, ?)
@@ -130,3 +126,13 @@ class User(object):
     def validate(self, password):
         if self.password_hash == hashlib.sha3_512(password.encode('utf-8')).hexdigest():
             return True
+
+
+def create_admin_user():
+    conn, c = connect_db()
+    user_count = c.execute("""
+                        SELECT COUNT(username) FROM users
+                        """).fetchone()[0]
+    if not user_count:
+        User.create('admin1', 'pass1').save()
+    conn.commit()

@@ -1,9 +1,15 @@
 import sqlite3
+from logger_server import app
+
+
+def connect_db():
+    print("DATABASE URI IN database.py %s" % app.config['DATABASE_URI'])
+    conn = sqlite3.connect(app.config['DATABASE_URI'])
+    return conn, conn.cursor()
 
 
 def setup_db():
-    conn = sqlite3.connect("logger.db")
-    c = conn.cursor()
+    conn, c = connect_db()
     c.execute("""
             CREATE TABLE IF NOT EXISTS messages
             (message TEXT,
@@ -25,8 +31,7 @@ def setup_db():
 
 
 def clear_db(messages=True, users=False):
-    conn = sqlite3.connect("logger.db")
-    c = conn.cursor()
+    conn, c = connect_db()
 
     if messages:
         c.execute("""

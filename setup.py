@@ -1,12 +1,12 @@
 import pip
-import hashlib
+import sys
 from setuptools import setup, find_packages
-from logger_server.setup_db import setup_db
-from logger_server.models import User
+from logger_server.database import setup_db
+from logger_server.models import create_admin_user
 
 setup(name='logger_server',
       packages=find_packages(exclude=['tests']),
-      version='0.1',
+      version='0.2',
       license='MIT',
 
       description='Webservices that allow storing and retrieving log messages with basic auth',
@@ -21,11 +21,17 @@ setup(name='logger_server',
                         'requests',
                         'flask',
                         'flask-swagger',
-                        'flask-swagger-ui'
-                        ]
+                        'flask-swagger-ui',
+                        'pytest-flask',
+                        'pytest_runner'
+                        ],
+      setup_requires=['pytest-runner'],
+      tests_require=['pytest'],
+      test_suite='tests'
       )
 
-# TODO: pip.main is not part of the public interface
-pip.main(["install", 'git+https://github.com/skyferthesly/logger_client'])
-setup_db()
-User('admin1', hashlib.sha3_512('pass1'.encode('utf-8')).hexdigest()).save()
+if len(sys.argv) > 1 and not sys.argv[1] == 'test':
+    # TODO: pip.main is not part of the public interface
+    pip.main(["install", 'git+https://github.com/skyferthesly/logger_client'])
+    setup_db()
+    create_admin_user()
