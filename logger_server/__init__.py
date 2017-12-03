@@ -3,7 +3,6 @@ import sys
 from flask import Flask
 from flask_swagger_ui import get_swaggerui_blueprint
 
-print("logger_server init")
 app = Flask(__name__)
 
 # config
@@ -16,13 +15,11 @@ app.config['TESTING'] = config['DEFAULT'].getboolean('TESTING')
 app.config['SWAGGER_JSON_URL'] = config['DEFAULT']['SWAGGER_JSON_URL']
 
 if sys.argv[1] == 'test':
-    print('test config')
     # test
     app.config['DEBUG'] = config['TEST'].getboolean('DEBUG')
     app.config['TESTING'] = config['TEST'].getboolean('TESTING')
     app.config['DATABASE_URI'] = config['TEST']['DATABASE_URI']
 else:
-    print('prod config')
     # prod
     app.config['DATABASE_URI'] = config['PROD']['DATABASE_URI']
 

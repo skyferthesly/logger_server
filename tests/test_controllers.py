@@ -73,3 +73,4 @@ def test_get_messages_params(client):
     assert messages_data[1]['message'] == 'a'
 
 # TODO aggregate endpoint test
+# TODO messages get error codes test
