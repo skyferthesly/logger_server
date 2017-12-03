@@ -10,14 +10,11 @@ config = configparser.ConfigParser()
 config.read("config.ini")
 
 # default
-app.config['DEBUG'] = config['DEFAULT'].getboolean('DEBUG')
-app.config['TESTING'] = config['DEFAULT'].getboolean('TESTING')
 app.config['SWAGGER_JSON_URL'] = config['DEFAULT']['SWAGGER_JSON_URL']
 
-if len(sys.argv) > 1 and sys.argv[1] == 'test':
+if app.config['TESTING']:
     # test
     app.config['DEBUG'] = config['TEST'].getboolean('DEBUG')
-    app.config['TESTING'] = config['TEST'].getboolean('TESTING')
     app.config['DATABASE_URI'] = config['TEST']['DATABASE_URI']
 else:
     # prod
