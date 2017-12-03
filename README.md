@@ -10,6 +10,10 @@ Starting webservices:
     1. export FLASK_APP=logger_server/controllers.py
     2. flask run
 
+**Note**: it is unusual to import a client into a server project. This
+is ONLY to prove that the client can be installed as an external dependency.
+You find can more information about the client [here](https://github.com/skyferthesly/logger_client).
+
 Starting client:
 
     1. export SIMPLIFIED_LOGGER_SERVER_URI=<YOUR_SERVER_URI>
@@ -18,10 +22,6 @@ Starting client:
 
 SERVER_URI for local is http://127.0.0.1:5000/ by default.\
 MESSAGES_ENDPOINT is messages/ by default.
-
-**Note**: it is unusual to import a client into a server project. This
-is ONLY to prove that the client can be installed as an external dependency.
-You find can more information about the client [here](https://github.com/skyferthesly/logger_client).
 
 # Usage
 The API is documented using swagger. After starting the server, head over
