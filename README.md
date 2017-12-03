@@ -57,6 +57,10 @@ Currently, this API doesn't differentiate messages sent by different clients.
 Something as simple as having a "client" table with an id and name would
 suffice in allowing clients to store messages with its specific identifier.
 
+**User Administration**\
+The next iteration of the API should include endpoints for User Administration.
+The models already exist.
+
 **Filtering by Message Content**\
 Being able to filter by user_id or client_id would be a welcomed addition
 to this API's functionality. To achieve this, first we need to store

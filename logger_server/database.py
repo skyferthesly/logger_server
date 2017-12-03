@@ -3,7 +3,6 @@ from logger_server import app
 
 
 def connect_db():
-    print("DATABASE URI IN database.py %s" % app.config['DATABASE_URI'])
     conn = sqlite3.connect(app.config['DATABASE_URI'])
     return conn, conn.cursor()
 

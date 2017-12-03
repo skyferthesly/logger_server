@@ -63,9 +63,9 @@ class Message(object):
     def get_aggregate(cls):
         conn, c = connect_db()
         res = c.execute("""
-                SELECT strftime('%-H', m.time), COUNT(*)
+                SELECT strftime('%Y-%m-%d %H:00', datetime(time, 'unixepoch', 'localtime')) AS t, COUNT(*)
                 FROM messages AS m
-                GROUP BY strftime('%-H', m.time)
+                GROUP BY t
                 """)
 
         response = dict()
