@@ -15,20 +15,20 @@ setup(name='logger_server',
       author='Skyler Moore-Firkins',
       author_email='brehon1104@gmail.com',
 
-      install_requires=['pytest',
-                        'requests',
-                        'flask',
-                        'flask-swagger',
-                        'flask-swagger-ui',
-                        'pytest-flask',
-                        'pytest-runner'
+      install_requires=['pytest>=3.3.0',
+                        'requests>=2.18.4',
+                        'flask>=0.12.2',
+                        'flask-swagger>=0.2.13',
+                        'flask-swagger-ui>=3.0.12',
+                        'pytest-flask>=0.10.0',
+                        'pytest-runner>=3.0'
                         ],
-      setup_requires=['flask',
-                      'pytest',
-                      'pytest-runner',
-                      'flask-swagger',
-                      'flask-swagger-ui'],
-      tests_require=['pytest'],
+      setup_requires=['flask>=0.12.2',
+                      'pytest>=3.3.0',
+                      'pytest-runner>=3.0',
+                      'flask-swagger>=0.2.13',
+                      'flask-swagger-ui>=3.0.12'],
+      tests_require=['pytest>=3.3.0'],
       test_suite='tests'
       )
 

@@ -4,3 +4,4 @@ requests==2.18.4
 flask-swagger==0.2.13
 flask-swagger-ui==3.0.12
 pytest-flask==0.10.0
+pytest-runner==3.0
