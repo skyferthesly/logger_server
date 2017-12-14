@@ -1,10 +1,9 @@
 import configparser
+import sys
 from flask import Flask
-from flask_cors import CORS
 from flask_swagger_ui import get_swaggerui_blueprint
 
 app = Flask(__name__)
-CORS(app)
 
 # config
 config = configparser.ConfigParser()
