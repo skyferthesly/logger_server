@@ -7,7 +7,7 @@ install all dependencies including the external client.
 
 Starting webservices:
 
-    1. export FLASK_APP=logger_server/controllers.py
+    1. export FLASK_APP=webservices_template/controllers.py
     2. flask run
 
 **Note**: it is unusual to import a client into a server project. This
@@ -18,7 +18,7 @@ Starting client:
 
     1. export SIMPLIFIED_LOGGER_SERVER_URI=<YOUR_SERVER_URI>
     2. export MESSAGES_ENDPOINT=<YOUR_MESSAGES_ENDPOINT>
-    3. python logger_server/client.py
+    3. python webservices_template/client.py
 
 SERVER_URI for local is http://127.0.0.1:5000/ by default.\
 MESSAGES_ENDPOINT is messages/ by default.
